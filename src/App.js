@@ -8,7 +8,7 @@ class App extends Component {
     super();
     this.state = {
       coinAmount: '',
-      cryptoCurrencies: [],
+      // cryptoCurrencies: [],
       initialPrice: '',
       isValid: false,
       total: '',
@@ -23,11 +23,12 @@ class App extends Component {
       .then(response => response.json())
       .then(response => this.setState({currentVal: response[0].price_usd}))
       .catch(console.log)
-
-    fetch(`https://api.coinmarketcap.com/v1/ticker/`)
-      .then(response => response.json())
-      .then(response => this.setState({cryptoCurrencies: this.mapToCryptoId(response)}))
-      .catch(console.log)
+      
+    // @TODO: Add crypto dropdown
+    // fetch(`https://api.coinmarketcap.com/v1/ticker/`)
+    //   .then(response => response.json())
+    //   .then(response => this.setState({cryptoCurrencies: this.mapToCryptoId(response)}))
+    //   .catch(console.log)
   }
 
   mapToCryptoId = (cryptoList) => cryptoList.map( crypto => crypto.id);
