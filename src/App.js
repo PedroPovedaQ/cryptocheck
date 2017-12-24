@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import CryptoSelector from './CryptoSelector/CryptoSelector.component';
 import logo from './logo.png';
 import './App.css';
 
@@ -8,7 +9,7 @@ class App extends Component {
     super();
     this.state = {
       coinAmount: '',
-      // cryptoCurrencies: [],
+      currencies: [],
       initialPrice: '',
       isValid: false,
       total: '',
@@ -19,19 +20,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch(`https://api.coinmarketcap.com/v1/ticker/litecoin/`)
-      .then(response => response.json())
-      .then(response => this.setState({currentVal: response[0].price_usd}))
-      .catch(console.log)
-      
+    fetch(`https://api.coinmarketcap.com/v1/ticker/litecoin/`).then(response => response.json()).then(response => this.setState({currentVal: response[0].price_usd})).catch(console.log)
+
     // @TODO: Add crypto dropdown
-    // fetch(`https://api.coinmarketcap.com/v1/ticker/`)
-    //   .then(response => response.json())
-    //   .then(response => this.setState({cryptoCurrencies: this.mapToCryptoId(response)}))
-    //   .catch(console.log)
+    fetch(`https://api.coinmarketcap.com/v1/ticker/`).then(response => response.json()).then(response => this.setState({currencies: this.mapToCryptoId(response)})).catch(console.log)
   }
 
-  mapToCryptoId = (cryptoList) => cryptoList.map( crypto => crypto.id);
+  mapToCryptoId = (cryptoArray) => cryptoArray.map(crypto => Object.Assign({}, {
+    id : crypto.id,
+    name: crypto.name,
+    price: crypto.price_usd
+  }));
 
   handleChange = event => {
     const name = event.target.name;
@@ -54,8 +53,10 @@ class App extends Component {
     return (<div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
-        <h1 className="App-title">Welcome to your {this.cryptoName} portfolio.</h1>
+        <h1 className="App-title">Welcome to your {this.cryptoName}
+          portfolio.</h1>
       </header>
+      <CryptoSelector items = "currencies"></CryptoSelector>
       <div className="callout">
         <h5>Current Price: $<span className="primary">{this.state.currentVal}</span>.</h5>
       </div>
@@ -79,31 +80,33 @@ class App extends Component {
       </form>
       {
         this.state.isValid > 0 && <h2>
-            You initially invested ${Number(this.state.initialInvestment).toFixed(2)} USD.
+            You initially invested ${Number(this.state.initialInvestment).toFixed(2)}
+            USD.
           </h2>
       }
 
       {
         this.state.isValid && this.state.difference > 0 && <h2>
-            You have a gained ${Number(this.state.difference).toFixed(2)}  USD.
+            You have a gained ${Number(this.state.difference).toFixed(2)}
+            USD.
           </h2>
       }
 
       {
         this.state.isValid && this.state.difference < 0 && <h2 className="alert">
-            You have lost ${Number(this.state.difference).toFixed(2)} USD!
+            You have lost ${Number(this.state.difference).toFixed(2)}
+            USD!
           </h2>
       }
 
       {
         this.state.isValid && this.state.difference === 0 && <h2 className="alert">
-          You haven't gained or lost any money.
-        </h2>
-      }
-
-      {
+            You haven't gained or lost any money.
+          </h2>
+      } {
         this.state.isValid > 0 && <h2>
-            You have a total of ${Number(this.state.total).toFixed(2)} USD.
+            You have a total of ${Number(this.state.total).toFixed(2)}
+            USD.
           </h2>
       }
 
