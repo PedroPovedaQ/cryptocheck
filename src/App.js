@@ -70,8 +70,7 @@ class App extends Component {
                   <div className="row">
                     <div className="small-2 medium-3 columns">
                       <p className="App-intro">
-                        How much {this.state.currency.name}
-                        do you own?
+                        How much {this.state.currency.name} do you own?
                       </p>
                       <Input name="coinAmount" type="number" value={this.state.coinAmount}
                         onChange={this.handleChange}/>
