@@ -8,8 +8,6 @@
     "prettier": "^1.9.2"
   },
   "dependencies": {
-    "foundation-sites": "^6.4.4-rc1",
-    "jquery": "^3.2.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.0.17",
