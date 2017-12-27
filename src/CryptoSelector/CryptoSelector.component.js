@@ -1,17 +1,21 @@
 import React, {Component} from 'react';
 import './CryptoSelector.css';
-import {Dropdown} from 'semantic-ui-react';
+import {Dropdown, Header} from 'semantic-ui-react';
 
 class CryptoSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currencies: []
+      currencies: [],
+      error: false
     };
   }
 
   componentDidMount() {
-    fetch(`https://api.coinmarketcap.com/v1/ticker/`).then(response => response.json()).then(response => this.setState({currencies: this.mapToCryptoId(response)})).catch(console.log)
+    fetch(`https://api.coinmarketcap.com/v1/ticker/`)
+      .then(response => response.json())
+      .then(response => this.setState({currencies: this.mapToCryptoId(response)}))
+      .catch(err => this.setState({error: true}));
   }
 
   mapToCryptoId = (cryptoArray) => cryptoArray.map(crypto => Object.assign({}, {
@@ -28,12 +32,23 @@ class CryptoSelector extends Component {
     this.props.onCurrencyChange(currency.value);
 
   render() {
-    return (<Dropdown placeholder='Select Currency'
-      fluid
-      selection
-      search
-      options={this.state.currencies}
-      onChange={this.handleClick}/>);
+    return (
+      <div>
+      {
+        !this.state.error && <Dropdown placeholder='Select Currency'
+          fluid
+          selection
+          search
+          options={this.state.currencies}
+          onChange={this.handleClick}/>
+      }
+
+      {
+        this.state.error &&
+        <Header as='h3'> Unable to retrieve list of cryptocurrencies. Please try again later. </Header>
+      }
+      </div>
+    );
   }
 }
 

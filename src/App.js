@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-// import $ from 'jquery';
 import CryptoSelector from './CryptoSelector/CryptoSelector.component';
 import logo from './logo.png';
 import './App.css';
-// import 'foundation-sites';
-import { Header, Grid } from 'semantic-ui-react';
+import {Header, Grid, Button, Input, Table} from 'semantic-ui-react';
+
 class App extends Component {
   constructor() {
     super();
@@ -22,10 +21,6 @@ class App extends Component {
       difference: 0,
       initialInvestment: 0
     };
-  }
-
-  componentDidMount() {
-    // $(document).foundation();
   }
 
   handleCurrencyChange = currency => {
@@ -49,7 +44,15 @@ class App extends Component {
     event.preventDefault();
   };
 
+  getCashClass = difference => difference < 0
+    ? 'error'
+    : 'positive';
+
   render() {
+    const moneyClass = this.state.difference < 0
+      ? 'error'
+      : 'positive';
+
     return (<div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
@@ -57,72 +60,66 @@ class App extends Component {
           Welcome to your Crypto Portfolio
         </h1>
       </header>
-      <Grid centered columns={2}>
-        <Grid.Column>
-          <CryptoSelector
-            className="dropdown"
-            currency={this.state.currency}
-            onCurrencyChange={this.handleCurrencyChange}>
-          </CryptoSelector>
+      <Grid centered="centered" columns={2}>
+        <Grid.Row columns={3}>
+          <Grid.Column>
+            <CryptoSelector className="dropdown" currency={this.state.currency}
+              onCurrencyChange={this.handleCurrencyChange}></CryptoSelector>
+            {
+              this.state.currency.name && <form onSubmit={this.handleSubmit}>
+                  <div className="row">
+                    <div className="small-2 medium-3 columns">
+                      <p className="App-intro">
+                        How much {this.state.currency.name}
+                        do you own?
+                      </p>
+                      <Input name="coinAmount" type="number" value={this.state.coinAmount}
+                        onChange={this.handleChange}/>
+                    </div>
 
-          {
-            this.state.currency.name && <form onSubmit={this.handleSubmit}>
-                <div className="callout">
-                  <Header as="h3">Current Price: $<span className="primary">{this.state.currency.price}</span>.</Header>
-                </div>
-                <div className="row">
-                  <div className="small-2 medium-3 columns">
-                    <p className="App-intro">
-                      How many {this.state.currency.name}(s) do you own?
-                    </p>
-                    <input name="coinAmount" type="number" value={this.state.coinAmount} onChange={this.handleChange}/>
+                    <div className="medium-3 columns">
+                      <p className="App-intro">
+                        At what price did your puchase your {this.state.currency.name}?
+                      </p>
+                      <Input name="initialPrice" type="number" value={this.state.initialPrice}
+                        onChange={this.handleChange}/>
+                    </div>
                   </div>
 
-                  <div className="medium-3 columns">
-                    <p className="App-intro">
-                      At what price did your puchase your {this.state.currency.name}?
-                    </p>
-                    <input name="initialPrice" type="number" value={this.state.initialPrice} onChange={this.handleChange}/>
-                  </div>
+                  <Button primary="primary" id="submit-btn" type="submit">Submit</Button>
+                </form>
+            }
+            {
+              this.state.isValid && <div className="results">
+                  <Table celled="celled" padded="padded">
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell singleLine="singleLine">Coin</Table.HeaderCell>
+                        <Table.HeaderCell>Initial Price</Table.HeaderCell>
+                        <Table.HeaderCell>Current Price</Table.HeaderCell>
+                        <Table.HeaderCell>Profit/Loss</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                      <Table.Row>
+                        <Table.Cell>
+                          <Header as='h4'>{this.state.currency.name}</Header>
+                        </Table.Cell>
+                        <Table.Cell singleLine="singleLine">${Number(this.state.initialPrice).toFixed(2)}</Table.Cell>
+                        <Table.Cell singleLine="singleLine">{this.state.currency.price}</Table.Cell>
+                        <Table.Cell className={moneyClass}>
+                          ${Number(this.state.difference).toFixed(2)}
+                        </Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  </Table>
                 </div>
-                <button className="button" name="submit" type="submit">GO</button>
-              </form>
-          }
-
-          {
-            this.state.isValid > 0 && <Header as='h2'>
-                You initially invested ${Number(this.state.initialInvestment).toFixed(2)} USD.
-              </Header>
-          }
-
-          {
-            this.state.isValid && this.state.difference > 0 && <Header as='h2'>
-                You have a gained ${Number(this.state.difference).toFixed(2)} USD.
-              </Header>
-          }
-
-          {
-            this.state.isValid && this.state.difference < 0 && <Header as='h2' className="alert">
-                You have lost ${Number(this.state.difference).toFixed(2)} USD!
-              </Header>
-          }
-
-          {
-            this.state.isValid && this.state.difference === 0 && <Header as='h2' className="alert">
-                You haven't gained or lost any money.
-              </Header>
-          } {
-            this.state.isValid > 0 && <Header as='h2'>
-                You have a total of ${Number(this.state.total).toFixed(2)} USD.
-              </Header>
-          }
-
-        </Grid.Column>
-    </Grid>
-
-
-
-      </div>);
+            }
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </div>);
   }
 }
 
