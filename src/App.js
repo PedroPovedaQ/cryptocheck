@@ -60,7 +60,7 @@ class App extends Component {
           Welcome to your Crypto Portfolio
         </h1>
       </header>
-      <Grid centered="centered" columns={2}>
+      <Grid centered columns={2}>
         <Grid.Row columns={3}>
           <Grid.Column>
             <CryptoSelector className="dropdown" currency={this.state.currency}
@@ -85,15 +85,15 @@ class App extends Component {
                     </div>
                   </div>
 
-                  <Button primary="primary" id="submit-btn" type="submit">Submit</Button>
+                  <Button primary id="submit-btn" type="submit">Submit</Button>
                 </form>
             }
             {
               this.state.isValid && <div className="results">
-                  <Table celled="celled" padded="padded">
+                  <Table padded>
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell singleLine="singleLine">Coin</Table.HeaderCell>
+                        <Table.HeaderCell singleLine>Coin</Table.HeaderCell>
                         <Table.HeaderCell>Initial Price</Table.HeaderCell>
                         <Table.HeaderCell>Current Price</Table.HeaderCell>
                         <Table.HeaderCell>Profit/Loss</Table.HeaderCell>
